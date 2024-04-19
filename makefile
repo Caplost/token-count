@@ -5,7 +5,7 @@ CONTAINER_NAME = tiktoken-api-container
 # 构建 Docker 镜像
 .PHONY: build
 build:
-    docker build -t $(IMAGE_NAME) .
+    docker build -t tiktoken-api .
 
 # 运行 Docker 容器
 .PHONY: run

@@ -1,1 +1,1 @@
-# calculate the token of your text
+# Calculate the token of your text
