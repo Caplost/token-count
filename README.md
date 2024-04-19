@@ -1,1 +1,1 @@
-# Get the total number of your text
+# calculate the token of your text
