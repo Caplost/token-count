@@ -1,5 +1,7 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify,Response
 import tiktoken
+import openai
+import json
 
 app = Flask(__name__)
 
@@ -31,6 +33,30 @@ def encode_text():
 @app.route('/.well-known/acme-challenge/<path:filename>')
 def serve_well_known(filename):
     return send_from_directory(os.path.join(app.root_path, '.well-known/acme-challenge'), filename)
+
+
+@app.route('/openai/chat', methods=['POST'])
+def chat():
+    data = request.json
+    if 'api_key' not in data:
+        return jsonify({'error': 'No API key provided'}), 400
+    if 'messages' not in data:
+        return jsonify({'error': 'No messages provided'}), 400
+
+    openai.api_key = data['api_key']
+    def generate():
+        response = openai.ChatCompletion.create(
+            model=data.get('model', 'gpt-3.5-turbo'),
+            messages=data['messages'],
+            stream=True,
+            max_tokens=data.get('max_tokens', 150),
+            temperature=data.get('temperature', 0.7)
+        )
+        for chunk in response:
+            if chunk.choices[0].delta.get('content'):
+                yield f"data: {json.dumps(chunk.choices[0].delta['content'])}\n\n"
+    
+    return Response(generate(), content_type='text/event-stream')
 
 
 if __name__ == '__main__':
