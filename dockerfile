@@ -8,6 +8,7 @@ WORKDIR /app
 COPY requirements.txt .
 
 # 安装 Python 依赖库
+RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
 # 复制 Flask 应用程序代码

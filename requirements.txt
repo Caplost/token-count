@@ -2,4 +2,3 @@ Flask
 tiktoken
 gunicorn
 openai
-json
